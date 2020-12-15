@@ -61,4 +61,6 @@ let main () =
   print_string (ast_stmt (Parser.prog Lexer.lexer lexbuf));
   print_string "\n"
 
-let _ = try main () with Parsing.Parse_error -> print_string "syntax error\n"
+let _ =
+  try main ()
+  with Parsing.Parse_error -> print_string (Lexer.error_message ())

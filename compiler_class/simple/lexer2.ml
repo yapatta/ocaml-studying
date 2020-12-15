@@ -1,4 +1,4 @@
-# 3 "lexer.mll"
+# 2 "lexer.mll"
  
  open Parser  
  exception No_such_symbol
@@ -6,7 +6,7 @@
  let increment () = line_num := !line_num + 1
  let now_lex = ref ""
  let next_lex = ref ""
- let error_message () = Printf.sprintf "Syntax Error at line %d, Before lexical unit: %s\n" !line_num !now_lex
+ let error_message () = Printf.sprintf "Syntax Error at line %d, Before lexical unit: %s" !line_num !now_lex
 
 # 12 "lexer.ml"
 let __ocaml_lex_tables = {
@@ -923,202 +923,202 @@ and __ocaml_lex_lexer_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
 let
-# 18 "lexer.mll"
+# 17 "lexer.mll"
             num
 # 929 "lexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 18 "lexer.mll"
+# 17 "lexer.mll"
                  ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; NUM (int_of_string num) )
 # 933 "lexer.ml"
 
   | 1 ->
-# 19 "lexer.mll"
+# 18 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; IF )
 # 938 "lexer.ml"
 
   | 2 ->
-# 20 "lexer.mll"
+# 19 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; ELSE )
 # 943 "lexer.ml"
 
   | 3 ->
-# 21 "lexer.mll"
+# 20 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; WHILE )
 # 948 "lexer.ml"
 
   | 4 ->
-# 22 "lexer.mll"
+# 21 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; SCAN )
 # 953 "lexer.ml"
 
   | 5 ->
-# 23 "lexer.mll"
+# 22 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; SPRINT )
 # 958 "lexer.ml"
 
   | 6 ->
-# 24 "lexer.mll"
+# 23 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; IPRINT )
 # 963 "lexer.ml"
 
   | 7 ->
-# 25 "lexer.mll"
+# 24 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; INT )
 # 968 "lexer.ml"
 
   | 8 ->
-# 26 "lexer.mll"
+# 25 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; RETURN )
 # 973 "lexer.ml"
 
   | 9 ->
-# 27 "lexer.mll"
+# 26 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; TYPE )
 # 978 "lexer.ml"
 
   | 10 ->
-# 28 "lexer.mll"
+# 27 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; VOID )
 # 983 "lexer.ml"
 
   | 11 ->
 let
-# 29 "lexer.mll"
+# 28 "lexer.mll"
         text
 # 989 "lexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 29 "lexer.mll"
+# 28 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; ID text )
 # 993 "lexer.ml"
 
   | 12 ->
 let
-# 30 "lexer.mll"
+# 29 "lexer.mll"
                       str
 # 999 "lexer.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
-# 30 "lexer.mll"
+# 29 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; STR str )
 # 1003 "lexer.ml"
 
   | 13 ->
-# 31 "lexer.mll"
+# 30 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; ASSIGN )
 # 1008 "lexer.ml"
 
   | 14 ->
-# 32 "lexer.mll"
+# 31 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; EQ )
 # 1013 "lexer.ml"
 
   | 15 ->
-# 33 "lexer.mll"
+# 32 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; NEQ )
 # 1018 "lexer.ml"
 
   | 16 ->
-# 34 "lexer.mll"
+# 33 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; GT )
 # 1023 "lexer.ml"
 
   | 17 ->
-# 35 "lexer.mll"
+# 34 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; LT )
 # 1028 "lexer.ml"
 
   | 18 ->
-# 36 "lexer.mll"
+# 35 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; GE )
 # 1033 "lexer.ml"
 
   | 19 ->
-# 37 "lexer.mll"
+# 36 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; LE )
 # 1038 "lexer.ml"
 
   | 20 ->
-# 38 "lexer.mll"
+# 37 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; PLUS )
 # 1043 "lexer.ml"
 
   | 21 ->
-# 39 "lexer.mll"
+# 38 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; MINUS )
 # 1048 "lexer.ml"
 
   | 22 ->
-# 40 "lexer.mll"
+# 39 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; TIMES )
 # 1053 "lexer.ml"
 
   | 23 ->
-# 41 "lexer.mll"
+# 40 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; DIV )
 # 1058 "lexer.ml"
 
   | 24 ->
-# 42 "lexer.mll"
+# 41 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; LB  )
 # 1063 "lexer.ml"
 
   | 25 ->
-# 43 "lexer.mll"
+# 42 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; RB  )
 # 1068 "lexer.ml"
 
   | 26 ->
-# 44 "lexer.mll"
+# 43 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; LS )
 # 1073 "lexer.ml"
 
   | 27 ->
-# 45 "lexer.mll"
+# 44 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; RS )
 # 1078 "lexer.ml"
 
   | 28 ->
-# 46 "lexer.mll"
+# 45 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; LP  )
 # 1083 "lexer.ml"
 
   | 29 ->
-# 47 "lexer.mll"
+# 46 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; RP  )
 # 1088 "lexer.ml"
 
   | 30 ->
-# 48 "lexer.mll"
+# 47 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; COMMA )
 # 1093 "lexer.ml"
 
   | 31 ->
-# 49 "lexer.mll"
+# 48 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; SEMI )
 # 1098 "lexer.ml"
 
   | 32 ->
-# 50 "lexer.mll"
+# 49 "lexer.mll"
                           ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; lexer lexbuf )
 # 1103 "lexer.ml"
 
   | 33 ->
-# 51 "lexer.mll"
-                          ( increment (); lexer lexbuf )
+# 50 "lexer.mll"
+                          ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; increment (); lexer lexbuf )
 # 1108 "lexer.ml"
 
   | 34 ->
-# 52 "lexer.mll"
-                          ( lexer lexbuf )
+# 51 "lexer.mll"
+                          ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; lexer lexbuf )
 # 1113 "lexer.ml"
 
   | 35 ->
-# 53 "lexer.mll"
-                          ( raise End_of_file )
+# 52 "lexer.mll"
+                          ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; raise End_of_file )
 # 1118 "lexer.ml"
 
   | 36 ->
-# 54 "lexer.mll"
-                          ( raise No_such_symbol )
+# 53 "lexer.mll"
+                          ( now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; raise No_such_symbol )
 # 1123 "lexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf;

@@ -3,6 +3,7 @@
 open Printf
 open Ast
 open Lexer
+open Parsing
 
 %}
 
@@ -30,6 +31,7 @@ prog : stmt  {  $1  }
 ty   : INT { IntTyp }
      | INT LS NUM RS { ArrayTyp ($3, IntTyp) }
      | ID	     { NameTyp $1 }
+     | INT LS error RS { raise Parse_error }
      ;
 
 decs : decs dec { $1@$2 }
@@ -40,6 +42,8 @@ dec  : ty ids SEMI   { List.map (fun x -> VarDec ($1,x)) $2 }
      | TYPE ID ASSIGN ty SEMI { [TypeDec ($2,$4)] }
      | ty ID LP fargs_opt RP block  { [FuncDec($2, $4, $1, $6)] }
      | VOID ID LP fargs_opt RP block  { [FuncDec($2, $4, VoidTyp, $6)] }
+     | ty ID LP error RP block  { raise Parse_error }
+     | VOID ID LP error RP block  { raise Parse_error }
      ; 
 
 ids  : ids COMMA ID    { $1@[$3] }
@@ -72,6 +76,11 @@ stmt : ID ASSIGN expr SEMI    { Assign (Var $1, $3) }
      | RETURN expr SEMI    { CallProc ("return", [$2]) }
      | block { $1 }
      | SEMI { NilStmt }
+     | ID ASSIGN error SEMI    { raise Parse_error }
+     | ID LS error RS ASSIGN expr SEMI { raise Parse_error }
+     | IF LP error RP stmt     { raise Parse_error }
+     | IF LP error RP stmt ELSE stmt 
+                              { raise Parse_error }
      ;
 
 aargs_opt: /* empty */     { [] }
@@ -80,6 +89,7 @@ aargs_opt: /* empty */     { [] }
 
 aargs : aargs COMMA expr  { $1@[$3] }
       | expr               { [$1] }
+      | error COMMA expr  { raise Parse_error }
       ;
 
 block: LB decs stmts RB  { Block ($2, $3) }
@@ -95,6 +105,14 @@ expr : NUM { IntExp $1  }
      | expr DIV expr { CallFunc ("/", [$1; $3]) }
      | MINUS expr %prec UMINUS { CallFunc("!", [$2]) }
      | LP expr RP  { $2 }
+     | ID LP error RP { raise Parse_error } 
+     | ID LS error RS { raise Parse_error }
+     | error PLUS expr { raise Parse_error } 
+     | error MINUS expr { raise Parse_error } 
+     | error TIMES expr { raise Parse_error } 
+     | error DIV expr { raise Parse_error } 
+     | MINUS error %prec UMINUS { raise Parse_error }
+     | LP error RP { raise Parse_error }
      ;
 
 cond : expr EQ expr  { CallFunc ("==", [$1; $3]) }
@@ -103,5 +121,11 @@ cond : expr EQ expr  { CallFunc ("==", [$1; $3]) }
      | expr LT expr  { CallFunc ("<", [$1; $3]) }
      | expr GE expr  { CallFunc (">=", [$1; $3]) }
      | expr LE expr  { CallFunc ("<=", [$1; $3]) }
+     | error EQ expr { raise Parse_error }
+     | error NEQ expr { raise Parse_error }
+     | error GT expr { raise Parse_error }
+     | error LT expr { raise Parse_error }
+     | error GE expr { raise Parse_error }
+     | error LE expr{ raise Parse_error }
      ;
 %%
