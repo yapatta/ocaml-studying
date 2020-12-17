@@ -1,14 +1,18 @@
 {
 	int a, b, m, n, r;
 	// abvrdvs
+	if (aa) {}
 	sprint ("You must give 2 integers.\n");
 	sprint ("First integer: ");
 	scan  (a);
+	if (aa);
 	sprint ("Second integer: ");
 	scan (b);
+	sgrofdnvlzks
 	m = a; n = b;
 	r = m - (m / n) * n;
 	m = n;
+	awv ;
 	n = r;
 	while (r > 0) {
 		r = m - (m / n) * n;

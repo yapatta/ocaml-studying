@@ -20,6 +20,7 @@ let rec ast_stmt ast =
       sprintf "If(%s,%s,Some %s)" (ast_exp e) (ast_stmt s1) (ast_stmt s2)
   | While (e, s) -> sprintf "While(%s,%s)" (ast_exp e) (ast_stmt s)
   | NilStmt -> "NilStmt"
+  | ErrorStmt -> "ErrorStmt"
 
 and ast_var ast =
   match ast with
@@ -45,6 +46,7 @@ and ast_exp ast =
   | CallFunc (s, l) ->
       sprintf "CallFunc(\"%s\",[%s])" s
         (List.fold_left (fun str x -> semi str ^ ast_exp x) "" l)
+  | ErrorStmt -> "ErrorStmt"
 
 and ast_typ ast =
   match ast with
@@ -61,6 +63,8 @@ let main () =
   print_string (ast_stmt (Parser.prog Lexer.lexer lexbuf));
   print_string "\n"
 
-let _ =
-  try main ()
-  with Parsing.Parse_error -> print_string (Lexer.error_message ())
+let _ = main ()
+
+(* try main ()
+   with Parsing.Parse_error -> print_string (Lexer.error_message ())
+*)
