@@ -8,6 +8,10 @@
 *.cmxs
 *.cmxa
 
+lexer.ml
+parser.mli
+print_ast
+
 # ocamlbuild working directory
 _build/
 
