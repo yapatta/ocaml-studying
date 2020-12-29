@@ -1,6 +1,6 @@
 {
+	// ユークリッド互除法
 	int a, b, m, n, r;
-	// abvrdvs
 	sprint ("You must give 2 integers.\n");
 	sprint ("First integer: ");
 	scan  (a);
