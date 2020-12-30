@@ -157,6 +157,12 @@ and trans_stmt ast nest tenv env =
       let l2 = incLabel () in
       sprintf "L%d:\n" l2 ^ condCode ^ trans_stmt s nest tenv env
       ^ sprintf "\tjmp L%d\n" l2 ^ sprintf "L%d:\n" l1
+  (* do while文のコード *)
+  | DoWhile (e, s) ->
+      let condCode, l1 = trans_cond_do e nest env in
+      let l2 = incLabel () in
+      sprintf "L%d:\n" l1 ^ trans_stmt s nest tenv env ^ condCode
+      ^ sprintf "L%d:\n" l2
   (* 空文 *)
   | NilStmt -> ""
 
@@ -253,6 +259,30 @@ and trans_cond ast nest env =
       | "<" -> (code ^ sprintf "\tjge L%d\n" l, l)
       | ">=" -> (code ^ sprintf "\tjl L%d\n" l, l)
       | "<=" -> (code ^ sprintf "\tjg L%d\n" l, l)
+      | _ -> ("", 0) )
+  | _ -> raise (Err "internal error")
+
+and trans_cond_do ast nest env =
+  match ast with
+  | CallFunc (op, left :: right :: _) -> (
+      let code =
+        (* オペランドのコード *)
+        trans_exp left nest env ^ trans_exp right nest env
+        (* オペランドの値を %rax，%rbxへ *)
+        ^ "\tpopq %rax\n"
+        ^ "\tpopq %rbx\n"
+        (* cmp命令 *)
+        ^ "\tcmpq %rax, %rbx\n"
+      in
+      let l = incLabel () in
+      match op with
+      (* 条件と分岐の関係は通常 *)
+      | "==" -> (code ^ sprintf "\tje L%d\n" l, l)
+      | "!=" -> (code ^ sprintf "\tjne L%d\n" l, l)
+      | ">" -> (code ^ sprintf "\tjg L%d\n" l, l)
+      | "<" -> (code ^ sprintf "\tjl L%d\n" l, l)
+      | ">=" -> (code ^ sprintf "\tjge L%d\n" l, l)
+      | "<=" -> (code ^ sprintf "\tjle L%d\n" l, l)
       | _ -> ("", 0) )
   | _ -> raise (Err "internal error")
 

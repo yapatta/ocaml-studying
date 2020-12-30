@@ -10,6 +10,7 @@ and stmt =
   | Block of dec list * stmt list
   | If of exp * stmt * stmt option
   | While of exp * stmt
+  | DoWhile of exp * stmt
   | NilStmt
 
 and exp =

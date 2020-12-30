@@ -21,6 +21,7 @@ rule lexer = parse
 | "if"                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; IF }
 | "else"                  { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; ELSE }
 | "while"                 { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; WHILE }
+| "do"                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; DO }
 | "scan"                  { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; SCAN }
 | "sprint"                { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; SPRINT }
 | "iprint"                { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; IPRINT }
