@@ -32,10 +32,13 @@ let check_array ty =
 
 exception SymErr of string
 
+(* 再宣言チェック *)
 let rec check_redecl decs tl vl =
   match decs with
   | [] -> ()
-  | FuncDec (s, _, _, _) :: rest ->
+  | FuncDec (s, _, _, _, r) :: rest ->
+      if List.mem s vl then raise (SymErr s) else check_redecl rest tl (s :: vl)
+  | VoidFuncDec (s, _, _, _) :: rest ->
       if List.mem s vl then raise (SymErr s) else check_redecl rest tl (s :: vl)
   | VarDec (_, s) :: rest ->
       if List.mem s vl then raise (SymErr s) else check_redecl rest tl (s :: vl)
@@ -56,7 +59,24 @@ let savedARG = 24 (* return address,  static link, old %rbp *)
 let rec type_dec ast (nest, addr) tenv env =
   match ast with
   (* 関数定義の処理 *)
-  | FuncDec (s, l, rlt, Block (dl, _)) ->
+  | FuncDec (s, l, rlt, Block (dl, _), r) ->
+      (* 関数名の記号表への登録 *)
+      check_redecl (List.map (fun (t, s) -> VarDec (t, s)) l @ dl) [] [];
+      let env' =
+        update s
+          (FunEntry
+             {
+               formals = List.map (fun (typ, _) -> create_ty typ tenv) l;
+               result = create_ty rlt tenv;
+               level = nest + 1;
+             })
+          env
+      in
+      (* 返り値の型チェック *)
+      if type_exp r env' == create_ty rlt tenv then
+        raise (TypeErr ("return type is not" ^ s));
+      (tenv, env', addr)
+  | VoidFuncDec (s, l, rlt, Block (dl, _)) ->
       (* 関数名の記号表への登録 *)
       check_redecl (List.map (fun (t, s) -> VarDec (t, s)) l @ dl) [] [];
       let env' =
@@ -148,7 +168,7 @@ and type_var ast env =
 
 and type_exp ast env =
   match ast with
-  | VarExp s -> type_var s env (* test2: envに変数がなくてエラー *)
+  | VarExp s -> type_var s env
   | IntExp i -> INT
   | CallFunc ("+", [ left; right ]) ->
       check_int (type_exp left env);

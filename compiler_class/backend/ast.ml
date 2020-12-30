@@ -22,7 +22,8 @@ and exp =
   | CallFunc of id * exp list
 
 and dec =
-  | FuncDec of id * (typ * id) list * typ * stmt
+  | VoidFuncDec of id * (typ * id) list * typ * stmt
+  | FuncDec of id * (typ * id) list * typ * stmt * exp
   | TypeDec of id * typ
   | VarDec of typ * id
 

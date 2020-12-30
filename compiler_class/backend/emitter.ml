@@ -49,8 +49,21 @@ let epilogue = "\tleaveq\n" (* -> movq %ebp, %esp; popl %ebp *) ^ "\tretq\n"
 (* 宣言部の処理：変数宣言->記号表への格納，関数定義->局所宣言の処理とコード生成 *)
 let rec trans_dec ast nest tenv env =
   match ast with
-  (* 関数定義の処理 *)
-  | FuncDec (s, l, _, block) ->
+  (* 返り値を持つ関数定義の処理 *)
+  | FuncDec (s, l, _, block, _) ->
+      (* 仮引数の記号表への登録 *)
+      let env' = type_param_dec l (nest + 1) tenv env in
+      (* 関数本体（ブロック）の処理 *)
+      let code = trans_stmt block (nest + 1) tenv env' in
+      (* 関数コードの合成 *)
+      output :=
+        !output ^ s ^ ":\n" (* 関数ラベル *) ^ prologue
+        (* プロローグ *) ^ code
+        (* 本体コード *) ^ epilogue
+  (* エピローグ *)
+  (* 変数宣言の処理 *)
+  (* 返り値を持たない関数定義の処理 *)
+  | VoidFuncDec (s, l, _, block) ->
       (* 仮引数の記号表への登録 *)
       let env' = type_param_dec l (nest + 1) tenv env in
       (* 関数本体（ブロック）の処理 *)

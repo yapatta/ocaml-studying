@@ -38,8 +38,8 @@ decs : decs dec { let (decs, stmts) = $1 in let (d, s) = $2 in (decs@d, stmts@s)
 
 dec  : ty ids SEMI   { let (d, stmts) = $2 in let decs = List.map (fun x -> VarDec ($1,x)) d in (decs, stmts) }
      | TYPE ID ASSIGN ty SEMI { ([TypeDec ($2,$4)], []) }
-     | ty ID LP fargs_opt RP block  { ([FuncDec($2, $4, $1, $6)], []) }
-     | VOID ID LP fargs_opt RP block  { ([FuncDec($2, $4, VoidTyp, $6)], []) }
+     | ty ID LP fargs_opt RP func_block  { let (fb, r) = $6 in ([FuncDec($2, $4, $1, fb, r)], []) }
+     | VOID ID LP fargs_opt RP block  { ([VoidFuncDec($2, $4, VoidTyp, $6)], []) }
      ; 
 
 ids  : ids COMMA ID    { let (decs, stmts) = $1 in (decs@[$3], stmts) }
@@ -87,6 +87,9 @@ aargs_opt: /* empty */     { [] }
 aargs : aargs COMMA expr  { $1@[$3] }
       | expr               { [$1] }
       ;
+
+func_block: LB decs stmts RETURN expr SEMI RB { let (decs, stmts) = $2 in (Block (decs, stmts@$3), $5) }
+          ;
 
 block: LB decs stmts RB  { let (decs, stmts) = $2 in Block (decs, stmts@$3) }
      ;
