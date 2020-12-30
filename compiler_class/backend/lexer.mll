@@ -38,6 +38,7 @@ rule lexer = parse
 | ">="                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; GE }
 | "<="                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; LE }
 | '+'                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; PLUS }
+| "++"                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; INC }
 | '-'                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; MINUS }
 | '*'                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; TIMES }
 | '/'                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; DIV }

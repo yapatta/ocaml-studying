@@ -183,6 +183,13 @@ and trans_exp ast nest env =
   | CallFunc ("+", [ left; right ]) ->
       trans_exp left nest env ^ trans_exp right nest env ^ "\tpopq %rax\n"
       ^ "\taddq %rax, (%rsp)\n"
+  (* ++のコード *)
+  (* stackのトップとして返す値は変わらない, aの参照先だけ変えればいい *)
+  | CallFunc ("++", [ arg ]) -> (
+      match arg with
+      | VarExp v ->
+          trans_var v nest env ^ "\tpushq (%rax)\n" ^ "\taddq $1, (%rax)\n"
+      | _ -> raise (Err "internal error") )
   (* -のコード *)
   | CallFunc ("-", [ left; right ]) ->
       trans_exp left nest env ^ trans_exp right nest env ^ "\tpopq %rax\n"

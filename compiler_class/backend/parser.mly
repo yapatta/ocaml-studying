@@ -10,14 +10,14 @@ open Lexer
 %token <int> NUM
 %token <string> STR ID
 %token INT IF WHILE SPRINT IPRINT SCAN EQ NEQ GT LT GE LE ELSE RETURN NEW
-%token PLUS MINUS TIMES DIV MOD POW LB RB LS RS LP RP ASSIGN SEMI COMMA TYPE VOID
+%token PLUS INC MINUS TIMES DIV MOD POW LB RB LS RS LP RP ASSIGN SEMI COMMA TYPE VOID
 %type <Ast.stmt> prog
 
 
 %nonassoc GT LT EQ NEQ GE LE
 %left PLUS MINUS         /* lowest precedence */
 %left TIMES DIV MOD POW        /* medium precedence */
-%nonassoc UMINUS      /* highest precedence */
+%nonassoc UMINUS INC     /* highest precedence */
 
 
 %start prog           /* the entry point */
@@ -92,6 +92,7 @@ expr : NUM { IntExp $1  }
      | ID LP aargs_opt RP { CallFunc ($1, $3) } 
      | ID LS expr RS  { VarExp (IndexedVar (Var $1, $3)) }
      | expr PLUS expr { CallFunc ("+", [$1; $3]) }
+     | ID INC { CallFunc ("++", [VarExp (Var $1)]) }
      | expr MINUS expr { CallFunc ("-", [$1; $3]) }
      | expr TIMES expr { CallFunc ("*", [$1; $3]) }
      | expr DIV expr { CallFunc ("/", [$1; $3]) }
