@@ -22,6 +22,7 @@ rule lexer = parse
 | "else"                  { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; ELSE }
 | "while"                 { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; WHILE }
 | "do"                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; DO }
+| "for"                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; FOR }
 | "scan"                  { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; SCAN }
 | "sprint"                { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; SPRINT }
 | "iprint"                { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; IPRINT }
@@ -54,6 +55,7 @@ rule lexer = parse
 | ')'                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; RP  }
 | ','                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; COMMA }
 | ';'                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; SEMI }
+| ".."                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; DDOT }
 | comment                 { lexer lexbuf }
 | ['\n']                  { increment (); lexer lexbuf }(* eat up whitespace *) 
 | [' ' '\t']              { lexer lexbuf }(* eat up whitespace *) 

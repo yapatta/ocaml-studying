@@ -123,9 +123,13 @@ and type_stmt ast env =
       if type_var v env != type_exp e env then raise (TypeErr "type error 4")
   | IncAssign (v, e) ->
       if type_var v env != type_exp e env then raise (TypeErr "type error 4")
+  | PostInc v -> if type_var v env != INT then raise (TypeErr "type error 4")
   | If (e, _, _) -> type_cond e env
   | While (e, _) -> type_cond e env
   | DoWhile (e, _) -> type_cond e env
+  | For (v, l, r, _) ->
+      if type_var v env != type_exp l env || type_exp l env != type_exp r env
+      then raise (TypeErr "type error 4")
   | NilStmt -> ()
 
 and type_var ast env =

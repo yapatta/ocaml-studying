@@ -6,11 +6,13 @@ type var = Var of id | IndexedVar of var * exp
 and stmt =
   | Assign of var * exp
   | IncAssign of var * exp
+  | PostInc of var
   | CallProc of id * exp list
   | Block of dec list * stmt list
   | If of exp * stmt * stmt option
   | While of exp * stmt
   | DoWhile of exp * stmt
+  | For of var * exp * exp * stmt
   | NilStmt
 
 and exp =

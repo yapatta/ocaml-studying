@@ -81,6 +81,8 @@ and trans_stmt ast nest tenv env =
       (* %raxにvのアドレス, stackのtop(%rsp)にeの値 *)
       trans_exp e nest env ^ trans_var v nest env ^ "\tpopq %rbx\n"
       ^ "\taddq (%rax), %rbx\n" ^ "\tmovq %rbx, (%rax)\n"
+  (* 後置増分演算子単体のstmtの場合 *)
+  | PostInc v -> trans_var v nest env ^ "\taddq $1, (%rax)\n"
   (* iprintのコード *)
   | CallProc ("iprint", [ arg ]) ->
       trans_exp arg nest env ^ "\tpopq  %rsi\n" ^ "\tleaq IO(%rip), %rdi\n"
@@ -163,6 +165,17 @@ and trans_stmt ast nest tenv env =
       let l2 = incLabel () in
       sprintf "L%d:\n" l1 ^ trans_stmt s nest tenv env ^ condCode
       ^ sprintf "L%d:\n" l2
+  (* for文のコード *)
+  (* lの式を実行(Assign) -> l < r なら実行 -> l++ ->  *)
+  | For (v, l, r, s) ->
+      let l1 = incLabel () in
+      let l2 = incLabel () in
+      trans_exp l nest env ^ trans_var v nest env ^ "\tpopq (%rax)\n"
+      ^ sprintf "L%d:\n" l1
+      ^ ( trans_var v nest env ^ "\tmovq (%rax), %rax\n" ^ trans_exp r nest env
+        ^ "\tpopq %rbx\n" ^ "\tcmpq %rax, %rbx\n" ^ sprintf "\tje L%d\n" l2 )
+      ^ trans_stmt s nest tenv env ^ trans_var v nest env
+      ^ "\taddq $1, (%rax)\n" ^ sprintf "\tjmp L%d\n" l1 ^ sprintf "L%d:\n" l2
   (* 空文 *)
   | NilStmt -> ""
 
