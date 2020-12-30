@@ -10,7 +10,7 @@ open Lexer
 %token <int> NUM
 %token <string> STR ID
 %token INT IF WHILE SPRINT IPRINT SCAN EQ NEQ GT LT GE LE ELSE RETURN NEW
-%token PLUS INC MINUS TIMES DIV MOD POW LB RB LS RS LP RP ASSIGN SEMI COMMA TYPE VOID
+%token PLUS INC MINUS TIMES DIV MOD POW LB RB LS RS LP RP ASSIGN INC_ASSIGN SEMI COMMA TYPE VOID
 %type <Ast.stmt> prog
 
 
@@ -61,6 +61,7 @@ stmts: stmts stmt  { $1@[$2] }
      ;
 
 stmt : ID ASSIGN expr SEMI    { Assign (Var $1, $3) }
+     | ID INC_ASSIGN expr SEMI { IncAssign (Var $1, $3) }
      | ID LS expr RS ASSIGN expr SEMI  { Assign (IndexedVar (Var $1, $3), $6) }
      | IF LP cond RP stmt     { If ($3, $5, None) }
      | IF LP cond RP stmt ELSE stmt 

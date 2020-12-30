@@ -76,7 +76,12 @@ and trans_stmt ast nest tenv env =
   (* 代入のコード：代入先フレームをsetVarで求める．*)
   | Assign (v, e) ->
       trans_exp e nest env ^ trans_var v nest env ^ "\tpopq (%rax)\n"
-      (* iprintのコード *)
+  (* インクリメント代入のコード: stackのトップに(%rax)の値を足して *)
+  | IncAssign (v, e) ->
+      (* %raxにvのアドレス, stackのtop(%rsp)にeの値 *)
+      trans_exp e nest env ^ trans_var v nest env ^ "\tpopq %rbx\n"
+      ^ "\taddq (%rax), %rbx\n" ^ "\tmovq %rbx, (%rax)\n"
+  (* iprintのコード *)
   | CallProc ("iprint", [ arg ]) ->
       trans_exp arg nest env ^ "\tpopq  %rsi\n" ^ "\tleaq IO(%rip), %rdi\n"
       ^ "\tmovq $0, %rax\n" ^ "\tcallq _printf\n"

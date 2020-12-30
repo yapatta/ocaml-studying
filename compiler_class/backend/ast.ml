@@ -5,6 +5,7 @@ type var = Var of id | IndexedVar of var * exp
 
 and stmt =
   | Assign of var * exp
+  | IncAssign of var * exp
   | CallProc of id * exp list
   | Block of dec list * stmt list
   | If of exp * stmt * stmt option

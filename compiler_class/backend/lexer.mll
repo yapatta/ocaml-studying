@@ -31,6 +31,7 @@ rule lexer = parse
 | id as text              { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; ID text }
 | '\"'[^'\"']*'\"' as str { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; STR str }
 | '='                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; ASSIGN }
+| "+="                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; INC_ASSIGN }
 | "=="                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; EQ }
 | "!="                    { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; NEQ }
 | '>'                     { line_num := !next_line_num; next_line_num := !next_line_num + !add_num; add_num := 0; now_lex := !next_lex; next_lex := Lexing.lexeme lexbuf; GT }
