@@ -88,7 +88,7 @@ aargs : aargs COMMA expr  { $1@[$3] }
       | expr               { [$1] }
       ;
 
-func_block: LB decs stmts RETURN expr SEMI RB { let (decs, stmts) = $2 in (Block (decs, stmts@$3), $5) }
+func_block: LB decs stmts RETURN expr SEMI RB { let (decs, stmts) = $2 in (Block (decs, stmts@$3@[CallProc ("return", [$5])]), $5) }
           ;
 
 block: LB decs stmts RB  { let (decs, stmts) = $2 in Block (decs, stmts@$3) }

@@ -36,6 +36,7 @@ exception SymErr of string
 let rec check_redecl decs tl vl =
   match decs with
   | [] -> ()
+  (* 関数の再宣言チェック *)
   | FuncDec (s, _, _, _, r) :: rest ->
       if List.mem s vl then raise (SymErr s) else check_redecl rest tl (s :: vl)
   | VoidFuncDec (s, _, _, _) :: rest ->
@@ -72,11 +73,24 @@ let rec type_dec ast (nest, addr) tenv env =
              })
           env
       in
+      let tenv', env'', addr'' =
+        type_decs
+          (List.map (fun (t, s) -> VarDec (t, s)) l @ dl)
+          (nest + 2) tenv env'
+      in
       (* 返り値の型チェック *)
-      if type_exp r env' == create_ty rlt tenv then
-        raise (TypeErr ("return type is not" ^ s));
+      if type_exp r env'' != create_ty rlt tenv then
+        raise (TypeErr "return type error");
       (tenv, env', addr)
-  | VoidFuncDec (s, l, rlt, Block (dl, _)) ->
+  | VoidFuncDec (s, l, rlt, Block (dl, st)) ->
+      (* return文がある場合エラー *)
+      let rec have_return s =
+        match s with
+        | CallProc ("return", _) :: rest -> true
+        | [] -> false
+        | _ :: rest -> have_return rest
+      in
+      if have_return st then raise (TypeErr "return type error");
       (* 関数名の記号表への登録 *)
       check_redecl (List.map (fun (t, s) -> VarDec (t, s)) l @ dl) [] [];
       let env' =
@@ -156,7 +170,6 @@ and type_var ast env =
   match ast with
   | Var s -> (
       let entry = env s in
-      (* ここでエラー *)
       match entry with
       | VarEntry { ty; _ } -> actual_ty ty
       | _ -> raise (No_such_symbol s) )
