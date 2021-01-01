@@ -76,7 +76,7 @@ let rec type_dec ast (nest, addr) tenv env =
       let tenv', env'', addr'' =
         type_decs
           (List.map (fun (t, s) -> VarDec (t, s)) l @ dl)
-          (nest + 2) tenv env'
+          (nest + 1) tenv env'
       in
       (* 返り値の型チェック *)
       if type_exp r env'' != create_ty rlt tenv then
